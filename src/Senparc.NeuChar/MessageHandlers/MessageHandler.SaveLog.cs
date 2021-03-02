@@ -1,7 +1,7 @@
 ﻿#region Apache License Version 2.0
 /*----------------------------------------------------------------
 
-Copyright 2019 Suzhou Senparc Network Technology Co.,Ltd.
+Copyright 2021 Suzhou Senparc Network Technology Co.,Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
 #endregion Apache License Version 2.0
 
 /*----------------------------------------------------------------
-    Copyright (C) 2020 Senparc
+    Copyright (C) 2021 Senparc
     
     文件名：MessageHandler.SaveLog.cs
     文件功能描述：微信请求日志记录
@@ -48,6 +48,9 @@ namespace Senparc.NeuChar.MessageHandlers
         where TRequest : class, IRequestMessageBase
         where TResponse : class, IResponseMessageBase
     {
+        /// <summary>
+        /// 随机日志文件名
+        /// </summary>
         readonly Func<string> _getRandomFileName = () => SystemTime.Now.ToString("yyyyMMdd-HHmmss") + Guid.NewGuid().ToString("n").Substring(0, 6);
 
         #region 记录 日志 
@@ -87,7 +90,7 @@ namespace Senparc.NeuChar.MessageHandlers
                 var key = Guid.NewGuid().ToString();
                 queue.Add(key, () =>
                 {
-                    if (this.RequestDocument!=null)
+                    if (this.RequestDocument != null)
                     {
                         this.RequestDocument.Save(Path.Combine(logPath, string.Format("{0}_Request_{1}_{2}.txt", _getRandomFileName(),
                                               this.RequestMessage?.FromUserName,
@@ -98,7 +101,7 @@ namespace Senparc.NeuChar.MessageHandlers
                         System.IO.File.WriteAllText(Path.Combine(logPath, string.Format("{0}_UntreatedRequest.txt", _getRandomFileName())),
                                               this.TextResponseMessage);
                     }
-                    
+
                     if (this.UsingEncryptMessage && this.EcryptRequestDocument != null)
                     {
                         this.EcryptRequestDocument.Save(Path.Combine(logPath, string.Format("{0}_Request_Ecrypt_{1}_{2}.txt", _getRandomFileName(),

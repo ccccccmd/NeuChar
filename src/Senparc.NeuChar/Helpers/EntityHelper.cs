@@ -1,7 +1,7 @@
 ﻿#region Apache License Version 2.0
 /*----------------------------------------------------------------
 
-Copyright 2019 Suzhou Senparc Network Technology Co.,Ltd.
+Copyright 2021 Suzhou Senparc Network Technology Co.,Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
 #endregion Apache License Version 2.0
 
 /*----------------------------------------------------------------
-    Copyright (C) 2020 Senparc
+    Copyright (C) 2021 Senparc
     
     文件名：EntityHelper.cs
     文件功能描述：实体与xml相互转换
@@ -38,6 +38,12 @@ Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
 
     修改标识：Senparc - 20190529
     修改描述：FillEntityWithXml()方法添加 "ThirdFasteRegisterInfo" 类型: 开放平台-小程序-快速注册
+
+    修改标识：ccccccmd - 20201013
+    修改描述：v1.2.201 MASSSENDJOBFINISH 事件增加 ArticleUrlResult 节点
+
+    修改标识：Billzjh - 20201210
+    修改描述：v1.3.200 添加企业微信推广码注册对应转换方法
 
 ----------------------------------------------------------------*/
 
@@ -196,6 +202,17 @@ namespace Senparc.NeuChar.Helpers
                                     }
                                     prop.SetValue(entity, resultList, null);
                                 }
+                                else if (genericArgumentTypeName == "ArticleUrlResult_ResultList")//RequestMessageEvent_MassSendJobFinish
+                                {
+                                    List<ArticleUrlResult_ResultList> resultList = new List<ArticleUrlResult_ResultList>();
+                                    foreach (var item in root.Elements("ResultList").Elements("item"))
+                                    {
+                                        ArticleUrlResult_ResultList resultItem = new ArticleUrlResult_ResultList();
+                                        FillEntityWithXml(resultItem.item, new XDocument(item));
+                                        resultList.Add(resultItem);
+                                    }
+                                    prop.SetValue(entity, resultList, null);
+                                }
                                 //企业微信
                                 else if (genericArguments[0].Name == "MpNewsArticle")
                                 {
@@ -238,6 +255,15 @@ namespace Senparc.NeuChar.Helpers
                             FillClassValue<AroundBeacon>(entity, root, propName, prop);
                             break;
 
+                        #region 企业微信推广码注册
+                        case "ContactSyncToken":
+                            FillClassValue<ContactSyncToken>(entity, root, propName, prop);
+                            break;
+                        case "AuthUserInfoModel":
+                            FillClassValue<AuthUserInfoModel>(entity, root, propName, prop);
+                            break;
+                        #endregion
+
                         #region 开放平台-小程序
                         case "ThirdFasteRegisterInfo": //开放平台-小程序-快速注册
                             FillClassValue<ThirdFasteRegisterInfo>(entity, root, propName, prop);
@@ -251,6 +277,14 @@ namespace Senparc.NeuChar.Helpers
                         case "CopyrightCheckResult_ResultList_Item":
                             FillClassValue<CopyrightCheckResult_ResultList_Item>(entity, root, "item", prop);
                             break;
+                        case "ArticleUrlResult":
+                            FillClassValue<ArticleUrlResult>(entity, root, propName, prop);
+                            break;
+                        case "ArticleUrlResult_ResultList_Item":
+                            FillClassValue<ArticleUrlResult_ResultList_Item>(entity, root, "item", prop);
+                            break;
+                        
+                        
                         #region 企业号
                         /* 暂时放在Work.dll中
                                                 case "AgentType":

@@ -1,7 +1,7 @@
 ﻿#region Apache License Version 2.0
 /*----------------------------------------------------------------
 
-Copyright 2019 Suzhou Senparc Network Technology Co.,Ltd.
+Copyright 2021 Suzhou Senparc Network Technology Co.,Ltd.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
 except in compliance with the License. You may obtain a copy of the License at
@@ -19,7 +19,7 @@ Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
 #endregion Apache License Version 2.0
 
 /*----------------------------------------------------------------
-    Copyright (C) 2020 Senparc
+    Copyright (C) 2021 Senparc
     
     文件名：MessageHandler.cs
     文件功能描述：微信请求【异步方法】的集中处理方法
@@ -88,7 +88,7 @@ namespace Senparc.NeuChar.MessageHandlers
 
         public virtual async Task OnExecutingAsync(CancellationToken cancellationToken)
         {
-
+           
         }
 
         public virtual async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -98,6 +98,13 @@ namespace Senparc.NeuChar.MessageHandlers
                 return;
             }
 
+            //消息去重
+            CheckMessageRepeat();
+
+            if (CancelExcute)
+            {
+                return;
+            }
 
             //进行 APM 记录
             ExecuteStatTime = SystemTime.Now;
